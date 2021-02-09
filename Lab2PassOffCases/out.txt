@@ -1,0 +1,23 @@
+Failure!
+  (ID,"Z",15)
+Success!
+Schemes(2):
+  add(X,Y,Z)
+  nums(A,B)
+Facts(5):
+  add('1','2','3').
+  add('2','4','5').
+  nums('2','3').
+  nums('6','7').
+  nums('2','6').
+Rules(0):
+Queries(0):
+Domain(7):
+  '1'
+  '2'
+  '3'
+  '4'
+  '5'
+  '6'
+  '7'
+

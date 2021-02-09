@@ -19,6 +19,7 @@ class DatalogProgram{
     vector<Predicate> facts;
     vector<Predicate> queries;
     vector<Rule> rules; 
+    set<string> domain;
 
     Predicate scheme();
     vector<Predicate>  schemeList();

@@ -8,12 +8,12 @@ DatalogProgram::DatalogProgram(vector<Token> input){
 Predicate DatalogProgram::scheme(){
     string name = checkFor(ID);
     checkFor(LEFT_PAREN);
-    Id firstParam(checkFor(ID));
+    Id *firstParam = new Id(checkFor(ID));
     vector<Parameter*> params = idList();
-    params.insert(params.begin(), &firstParam);
-    cout << params[0]->toString() << endl;
+    params.insert(params.begin(), firstParam);
     checkFor(RIGHT_PAREN);
-    return Predicate(name, params);
+    Predicate pred(name, params);
+    return pred;
 }
 vector<Predicate> DatalogProgram::schemeList(){
     if(this->input[0].type == FACTS){
@@ -28,9 +28,9 @@ vector<Predicate> DatalogProgram::schemeList(){
 Predicate DatalogProgram::fact(){
     string name = checkFor(ID);
     checkFor(LEFT_PAREN);
-    String firstParam(checkFor(STRING));
+    String *firstParam = new String(checkFor(STRING));
     vector<Parameter*> params = stringList(); 
-    params.insert(params.begin(), &firstParam);
+    params.insert(params.begin(), firstParam);
     checkFor(RIGHT_PAREN);
     checkFor(PERIOD);
     return Predicate(name, params);
@@ -82,9 +82,9 @@ vector<Predicate> DatalogProgram::queryList(){
 Predicate DatalogProgram::headPredicate(){
     string name = checkFor(ID);
     checkFor(LEFT_PAREN);
-    Id firstParam(checkFor(ID));
+    Id *firstParam = new Id(checkFor(ID));
     vector<Parameter*> params = idList();
-    params.insert(params.begin(), &firstParam);
+    params.insert(params.begin(), firstParam);
     checkFor(RIGHT_PAREN);
     return Predicate(name, params);
 }
@@ -124,9 +124,9 @@ vector<Parameter*> DatalogProgram::stringList(){
         return vector<Parameter*>();
     } else {
         checkFor(COMMA);
-        String str(checkFor(STRING));
+        String *str = new String(checkFor(STRING));
         vector<Parameter*> strs = stringList();
-        strs.insert(strs.begin(), &str);
+        strs.insert(strs.begin(), str);
         return strs;
     }
 }
@@ -135,9 +135,9 @@ vector<Parameter*> DatalogProgram::idList(){
         return vector<Parameter*>();
     } else {
         checkFor(COMMA);
-        Id id(checkFor(ID));
+        Id *id = new Id(checkFor(ID));
         vector<Parameter*> ids = idList();
-        ids.insert(ids.begin(), &id);
+        ids.insert(ids.begin(), id);
         return ids;
     }
 }
@@ -146,8 +146,7 @@ Parameter* DatalogProgram::parameter(){
         String *str = new String(checkFor(STRING));
         return str;
     } else if (this->input[0].type == ID){
-        Id *id = new Id(checkFor(ID));
-        return id;
+        return new Id(checkFor(ID));
     } else {
         return expression();
     }
@@ -173,7 +172,6 @@ void DatalogProgram::parse(){
         checkFor(SCHEMES);
         checkFor(COLON);
         Predicate firstScheme = scheme();
-        cout << "T" << firstScheme.parameters[0]->myfunc() << endl;
         schemes = schemeList();
         schemes.insert(schemes.begin(), firstScheme);
         checkFor(FACTS);
@@ -208,22 +206,28 @@ string DatalogProgram::checkFor(TokenType match){
 
 std::string DatalogProgram::toString(){
     string text = "Success!\n";
-    cout << this->schemes[0].parameters[0]->toString() << endl;
     text += "Schemes(" + to_string(schemes.size()) + "):\n";
     for (unsigned int i = 0; i < schemes.size(); i++){
-        text += ("  " + schemes[i].toString());
+        text += ("  " + schemes[i].toString() + "\n");
     }
     text += "Facts(" + to_string(facts.size()) + "):\n";
     for (unsigned int i = 0; i < facts.size(); i++){
-        text += ("  " + facts[i].toString());
+        text += ("  " + facts[i].toString() + ".\n");
+        for (unsigned int j = 0; j < facts[i].parameters.size(); j++){
+            domain.insert(facts[i].parameters[j]->toString());
+        }
     }
     text += "Rules(" + to_string(rules.size()) + "):\n";
     for (unsigned int i = 0; i < rules.size(); i++){
-        text += ("  " + rules[i].toString());
+        text += ("  " + rules[i].toString() + ".\n");
     }
     text += "Queries(" + to_string(queries.size()) + "):\n";
-    for (unsigned int i = 0; i < queries.size(); i++){
-        text += ("  " + queries[i].toString());
+    for (unsigned int i = 0; i < queries.size(); i++){ 
+        text += ("  " + queries[i].toString() + "?\n");
+    }
+    text += "Domain(" + to_string(domain.size()) + "):\n";
+    for (set<string>::iterator it = domain.begin(); it != domain.end(); it++){
+        text += ("  " + (*it) + "\n");
     }
     return text;
 }

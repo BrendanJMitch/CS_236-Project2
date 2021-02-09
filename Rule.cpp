@@ -6,5 +6,13 @@ Rule::Rule(Predicate headPredicate, vector<Predicate> bodyPredicates){
 }
 
 std::string Rule::toString(){
-    return "";
+    string text = "";
+    text += headPredicate.toString() + " :- ";
+     for (unsigned int i = 0; i < bodyPredicates.size(); i++){
+        text += bodyPredicates[i].toString();
+        if(i < bodyPredicates.size()-1){
+            text += ",";
+        }
+    }
+    return text;
 }

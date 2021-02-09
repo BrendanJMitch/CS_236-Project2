@@ -10,9 +10,11 @@ Predicate::Predicate(string ID, vector<Parameter*> parameters){
 std::string Predicate::toString(){
     string text = ID + "(";
     for (unsigned int i = 0; i < parameters.size(); i++){
-        //text += parameters[i]->toString();
-        text += "(Temporary Param)";
+        text += parameters[i]->toString();
+        if(i < parameters.size()-1){
+            text += ",";
+        }
     }
-    text += ")\n";
+    text += ")";
     return text;
 }

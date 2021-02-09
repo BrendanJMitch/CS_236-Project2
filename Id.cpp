@@ -5,7 +5,6 @@ Id::Id(string name){
 }
 
 string Id::toString(){
-    cout << "Added an ID" << endl;
     return name;
 }
 

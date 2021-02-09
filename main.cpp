@@ -9,12 +9,6 @@ using namespace std;
 
 int main (int argc, char *argv[]){
 
-    Parameter *testId = new Id("hello world");
-    cout << testId->toString() << endl;
-    cout << testId->myfunc() << endl;
-
-
-
     if (argc == 1){
         cout << "No input files. Program terminated." << endl;
         return 0;
